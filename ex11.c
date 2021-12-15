@@ -1,6 +1,11 @@
 #include<stdio.h>
 
 int main(int argc, char *argv[]){
+	for(int i=0; i<=argc; i++){
+		
+		printf("argc: %d, argv: %s\n", i, argv[i]);
+	}
+
 	int numbers[4] = {0};
 	char name[4] = {'a'};
 

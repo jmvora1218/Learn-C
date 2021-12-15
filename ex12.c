@@ -3,9 +3,11 @@
 int main (int argc, char *argv[]){
 	
 	//type name[] = {initializer};      Array initializer
+	
+	char full_name[] = { 'Z', 'e', 'd', ' ', 'A', '.', ' ', 'S', 'h', 'a', 'w' };
 	int areas[] = { 10, 12, 13, 14, 20};
 	char name[] = "Zed";
-	char full_name[] = { 'Z', 'e', 'd', ' ', 'A', '.', ' ', 'S', 'h', 'a', 'w', '\0' };
+	//char full_name[] = { 'Z', 'e', 'd', ' ', 'A', '.', ' ', 'S', 'h', 'a', 'w' };
 
 	printf("The size of an int: %ld \n", sizeof(int));
 	printf("The size of an Areas (int[]: %ld) \n", sizeof(areas));

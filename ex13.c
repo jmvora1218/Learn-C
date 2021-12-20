@@ -23,7 +23,7 @@ as in i++.
 
 	// go through each string in argv 
 	//
-	for(i=0; i <=argc, i<argc; i++){
+	for(i=0; i <=argc; i++){
 		printf("argc %d: %s \n", i, argv[i]);
 	}
 	

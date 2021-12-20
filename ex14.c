@@ -22,9 +22,9 @@ void print_letters(char arg[])
 
 	for(i=0; arg[i] != '\0'; i++){
 		char ch =arg[i];
-		// if(can_print_it(ch)) //instead of function we can use below syntex.
-		if (isalpha((int)ch) || isdigit((int)ch || isblank(int)ch)){
-			printf("'%c' == %d",ch, ch);
+		// if(can_print_it(ch)) instead of function we can use below syntex.
+		if (isalpha((int)ch) || isdigit((int)ch)){
+			printf("'%c' == %d", ch, ch);
 		}
 	}
 	printf("\n");

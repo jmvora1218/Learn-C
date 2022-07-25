@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
 	//second way using pointers.
 	for(i=0;i<count;i++){
 		printf("cur_name_addr:%d || cur_name_value:%s \n",*(cur_name + i),*(cur_name + i));
-		
 		printf("cur_name_addr:%d || cur_name_value:%s \n");
 
 		//printf("POINTER_ADDRESS NAMES:[%p] and AGES:[%p] >> [%s] is [%d] years old. \n",*(cur_name + i), *(cur_age+i), *(cur_name + i), *(cur_age+i));

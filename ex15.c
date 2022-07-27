@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 	
 	//create two arrays we care bout/
 	int ages[] = {23, 43, 12, 89, 2};
-	char *names[] ={"Alan", "Frank", "Mary", "John", "Lisa","Mubarak"};
+	char *names[] ={"Alan", "Frank", "Mary", "John", "Lisa","Mubarakabcdefghijkl"};
 
 	//safely get the size of ages
 	int count = sizeof(ages)/sizeof(int);
@@ -22,13 +22,16 @@ int main(int argc, char *argv[])
 	//setup the pointers to the start of the arrays.
 	int *cur_age = ages;
 	char **cur_name = names;
-	/*
-	int count_2 = sizeof(names)/sizeof(char*);   // https://stackoverflow.com/questions/9522760/find-the-number-of-strings-in-an-array-of-strings-in-c
-	int count_2 = sizeof(names)/sizeof(names[0]); 
+	
+	//int count_2 = sizeof(names)/sizeof(char*);   // https://stackoverflow.com/questions/9522760/find-the-number-of-strings-in-an-array-of-strings-in-c
+	int count_1 = sizeof(names);   // https://stackoverflow.com/questions/9522760/find-the-number-of-strings-in-an-array-of-strings-in-c
+	int count_2 = sizeof(names[5]); 
+	
 	printf("Print count: %d\n",count);
+	printf("*****Print count_1: %d\n\n",count_1);
 	printf("*****Print count_2: %d\n\n",count_2);
-	printf("Print name[ ]: %d \n\n",sizeof(names[0]));
-	*/
+	//printf("Print name[ ]: %d \n\n",sizeof(names[0]));
+	
 
 	//second way using pointers.
 	for(i=0;i<count;i++){

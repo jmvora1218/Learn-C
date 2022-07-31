@@ -10,12 +10,12 @@
 struct Address {
     int id;
     int set;
-    char name[MAX_DATA];
-    char email[MAX_DATA];
+    char name[MAX_DATA];   // 512 array size
+    char email[MAX_DATA];   // 512 array size
 };
 
 struct Database {
-    struct Address rows[MAX_ROWS];
+    struct Address rows[MAX_ROWS];    // 100 array size
 };
 
 struct Connection {
@@ -77,7 +77,7 @@ void Database_close(struct Connection *conn)
     if (conn) {
         if (conn->file)
             fclose(conn->file);
-        if (conn->db)
+        if (conn->db)   
             free(conn->db);
         free(conn);
     }

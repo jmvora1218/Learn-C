@@ -5,7 +5,7 @@ struct Person{
 	int age;
 	int height;
 	int weight;
-};
+} who;
 
 struct Person Person_create(char *name, int age, int height, int weight)
 {
@@ -17,7 +17,6 @@ struct Person Person_create(char *name, int age, int height, int weight)
 	who.weight = weight;
 
 	return who;
-
 }
 
 void Person_print(struct Person who)

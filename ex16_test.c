@@ -21,6 +21,8 @@ struct Person Person_create(char *name, int age, int height, int weight)
 
 void Person_print(struct Person who)
 {
+
+	printf("AS:: %d \n", 'J');
 	printf("Name: %s \n", who.name);
 	printf("\t Age: %d \n", who.age);
 	printf("\t Height: %d \n", who.height);

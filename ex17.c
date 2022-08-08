@@ -20,7 +20,7 @@ struct Database {
 
 struct Connection {
     FILE *file;
-    struct Database *db;
+    struct Database *db;        //nested to nested struct 
 };
 
 void die(const char *message)

@@ -1,6 +1,5 @@
-#ifdef NDEBUG
-#ifndef __ex19_dbg_h__
-#define __ex19_dbg_h__
+#ifndef __dbg_h__
+#define __dbg_h__
 
 #include <stdio.h>
 #include <errno.h>
@@ -9,12 +8,15 @@
 #ifdef NDEBUG
 #define debug(M, ...)
 #else
-#define debug(M, ...) fprintf(stderr, M "[DEBUG] %s:%d:" "\n",##__VA_ARGS__,__FILE__, __LINE__)
+#define debug(M, ...) fprintf(stderr, "DEBUG %s:%d: " M "\n",\
+        __FILE__, __LINE__, ##__VA_ARGS__)
 #endif
 
 #define clean_errno() (errno == 0 ? "None" : strerror(errno))
 
-#define log_err(M, ...) fprintf(stderr,"[ERROR] (%s:%d: errno: %s) " M "\n", __FILE__, __LINE__,clean_errno(), ##__VA_ARGS__)
+#define log_err(M, ...) fprintf(stderr,\
+        "[ERROR] (%s:%d: errno: %s) " M "\n", __FILE__, __LINE__,\
+        clean_errno(), ##__VA_ARGS__)
 
 #define log_warn(M, ...) fprintf(stderr,\
         "[WARN] (%s:%d: errno: %s) " M "\n",\

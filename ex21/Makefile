@@ -1,0 +1,3 @@
+FLAGS=-Wall -g
+
+clean:

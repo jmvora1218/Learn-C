@@ -18,7 +18,7 @@ void scope_demo(int count)
     count = 3000;
 
     log_info("count after assign: %d", count);
-    scope_demo(count);
+//    scope_demo(count);       // to create stack overfolw and get detected with valgrid.
 }
 
 int main(int argc, char *argv[])

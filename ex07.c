@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 	double bug_rate = 1.2;
 	printf("You have %d bugs at the imaginary rate of %f. \n",bugs, bug_rate);
 	
+	printf("size fo long: %ld \n", sizeof(unsigned long));
 	unsigned long universe_of_defects = 1L * 1024L * 1024L * 23L;
 	printf("The entire Universe has %ld bugs. \n",universe_of_defects);
 	//printf("The entire Universe has %s bugs. \n",'\0');

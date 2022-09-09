@@ -7,6 +7,8 @@
 #define MAX_DATA 512
 #define MAX_ROWS 100
 
+// c has no class everything is at global scope
+
 struct Address {
     int id;
     int set;
@@ -43,12 +45,15 @@ void Database_load(struct Connection *conn)
 {
     int rc = fread(conn->db, sizeof(struct Database), 1, conn->file);
     if (rc != 1)
+        // if file not read 
         die("Failed to load database.");
 }
 
 struct Connection *Database_open(const char *filename, char mode)
 {
-    struct Connection *conn = malloc(sizeof(struct Connection));
+    
+    //action = create
+    struct Connection *conn = (struct Connection *) malloc(sizeof(struct Connection));
     if (!conn)
         die("Memory error");
 
@@ -57,11 +62,14 @@ struct Connection *Database_open(const char *filename, char mode)
         die("Memory error");
 
     if (mode == 'c') {
+        // create in write mode
         conn->file = fopen(filename, "w");
     } else {
+        // read-write and pointer saved 
         conn->file = fopen(filename, "r+");
 
         if (conn->file) {
+            // pass by reference
             Database_load(conn);
         }
     }
@@ -102,6 +110,9 @@ void Database_create(struct Connection *conn)
 
     for (i = 0; i < MAX_ROWS; i++) {
         // make a prototype to initialize it
+            // constructor
+        
+        // value (record) created but not set
         struct Address addr = {.id = i,.set = 0 };
         // then just assign it
         conn->db->rows[i] = addr;
@@ -162,13 +173,27 @@ int main(int argc, char *argv[])
 {
     if (argc < 3)
         die("USAGE: ex17 <dbfile> <action> [action params]");
+    // ./ext17 ext7db create 23
 
     char *filename = argv[1];
     char action = argv[2][0];
-    struct Connection *conn = Database_open(filename, action);
+    
+    // struct Connection * <- pointer to a shared connection
+    // file <- same shared lock file
+    struct Connection *conn = Database_open(filename,
+                                            //create
+                                                action);
+    // db loaded
+    
+    
     int id = 0;
 
+        // number of args passed 1st arg (int parse)
     if (argc > 3) id = atoi(argv[3]);
+    // id = 23 || not atoi "23"
+    
+    
+    // MAX_ROWS = 100
     if (id >= MAX_ROWS) die("There's not that many records.");
 
     switch (action) {

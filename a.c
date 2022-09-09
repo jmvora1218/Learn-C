@@ -7,8 +7,6 @@
 #define MAX_DATA 512
 #define MAX_ROWS 100
 
-// c has no class everything is at global scope
-
 struct Address {
     int id;
     
@@ -23,8 +21,35 @@ struct Address {
     char email[MAX_DATA];   // 512 array size
 };
 
-struct Database {
-    struct Address rows[MAX_ROWS];    // 100 array size
+struct Addressv2 {
+    int id;
+    
+    // flag
+    int set;
+    
+    // max size of string value
+    // that's why garbage... coz emmory already allocated but not initialized
+    // mem optimization - if char* instead of char[] then we clould have improved memory
+        // if needed then we could have allocated dynamic memory
+    
+    
+    int nameSize;
+    
+    char* name;   
+    char* email;
+};
+
+// complete other functions also | extra credit #2
+struct Databasev2 {
+    
+    int maxSize ; 
+    
+    struct Address *rows;   // dynamic
+};
+
+
+struct Database { 
+    struct Address rows[MAX_DATA];   // static 100 rows
 };
 
 struct Connection {
@@ -32,8 +57,43 @@ struct Connection {
     struct Database *db;        //nested to nested struct  // *db is variable pointer of dtabase stuct
 };
 
+
+struct Connection *global_conn ;
+
+
+void Database_findById(struct Connection *conn, int id);
+
+
+
+
+void diev2(const char *message, struct Connection *conn, char* context)
+{
+    // we could have accepted the conn arguement and closed all in-memory accesses and save a clean file
+        // if server program... 
+        // extra ref - dirty reads
+    
+    // we do not know which function calls die coz no error handling in c
+    if (errno) {
+        perror(message);
+    } else {
+        printf("ERROR: %s\n", message);
+    }
+
+    exit(1);
+    
+    // clean exit
+    // if blah context = write function then revert the write pointer again...
+    
+    // extra ref - think of this as blue screen in windows with context #233446 blah
+    free(conn->db);
+    free(conn);
+}
+
 void die(const char *message)
 {
+    // we could have accepted the conn arguement and closed all in-memory accesses and save a clean file
+        // if server program... 
+        // extra ref - dirty reads
     if (errno) {
         perror(message);
     } else {
@@ -47,21 +107,26 @@ void Address_print(struct Address *addr)
 {
     // print in-address value to console
     printf("%d %s %s\n", addr->id, addr->name, addr->email);
+    printf("\n");
+    // print all array
+    for(int i=0; i<MAX_DATA; i++) {
+        printf("%c", addr->name[i]);
+    }
 }
+
+
+
 
 void Database_load(struct Connection *conn)
 {
     int rc = fread(conn->db, sizeof(struct Database), 1, conn->file);
     if (rc != 1)
-        // if file not read 
         die("Failed to load database.");
 }
 
 struct Connection *Database_open(const char *filename, char mode)
 {
-    
-    //action = create
-    struct Connection *conn = (struct Connection *) malloc(sizeof(struct Connection));
+    struct Connection *conn = malloc(sizeof(struct Connection));
     if (!conn)
         die("Memory error");
 
@@ -71,14 +136,11 @@ struct Connection *Database_open(const char *filename, char mode)
         die("Memory error");
 
     if (mode == 'c') {
-        // create in write mode
         conn->file = fopen(filename, "w");
     } else {
-        // read-write and pointer saved 
         conn->file = fopen(filename, "r+");
 
         if (conn->file) {
-            // pass by reference
             Database_load(conn);
         }
     }
@@ -161,8 +223,12 @@ void Database_set(struct Connection *conn, int id, const char *name,const char *
     addr->set = 1;
 
     // WARNING: bug, read the "How To Break It" and fix this
+    
     char *res = strncpy(addr->name, name, MAX_DATA);
     
+    // char *res = "ok";
+    // addr->name = name;
+
     // demonstrate the strncpy bug
     if (!res)
         die("Name copy failed");
@@ -220,24 +286,41 @@ void Database_list(struct Connection *conn)
     }
 }
 
+void Database_findByName(struct Connection *conn, char* s_name) {
+    struct Address *addr = conn->db->rows;
+    struct Address *addr_obj; // = &(conn->db->rows[i]);
+    
+    int found = 0;
+
+    for(int i=0; i<MAX_ROWS; i++) {
+
+        addr_obj = &(conn->db->rows[i]);
+    
+        // printf("\nDEBUG :: %s == %s | op = %d", addr_obj->name, s_name, strcmp(addr_obj->name, s_name));
+
+        if( strcmp(addr_obj->name, s_name) == 0 ) {
+                found = 1;
+                break;
+            }
+    } // read all record for find
+
+    if(found) {
+        Address_print(addr_obj);
+    } else {
+       printf("record not found!");
+    }
+}
+
+
 int main(int argc, char *argv[])
 {
     // as a service i.e. while tru loop - then it'd leak memory
     if (argc < 3)
         die("USAGE: ex17 <dbfile> <action> [action params]");
-    // ./ext17 ext7db create 23
 
     char *filename = argv[1];
     char action = argv[2][0];
-    
-    // struct Connection * <- pointer to a shared connection
-    // file <- same shared lock file
-    struct Connection *conn = Database_open(filename,
-                                            //create
-                                                action);
-    // db loaded
-    
-    
+    struct Connection *conn = Database_open(filename, action);
     int id = 0;
 
     if (argc > 3) id = atoi(argv[3]);    // by default taking as a string ""
@@ -280,6 +363,14 @@ int main(int argc, char *argv[])
 
             Database_delete(conn, id);
             Database_write(conn);
+            break;
+            
+        case 'f':
+            // delete
+            if (argc != 4)
+                die("Need name to find by name");
+
+            Database_findByName(conn, argv[3]);
             break;
 
         case 'l':

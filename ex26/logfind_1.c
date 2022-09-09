@@ -18,10 +18,8 @@ int scan_file(const char *filename, int search_len, char *search_for[])
     while(fgets(line, MAX_LINE-1, file) != NULL && found == NULL) {
         for(i = 0; i < search_len && found == NULL; i++) {
             found = strcasestr(line, search_for[i]);
-            
             if(found) {
                 printf("%s\n", filename);
-                
             }
         }
     }

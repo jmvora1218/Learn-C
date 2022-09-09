@@ -11,7 +11,14 @@
 
 struct Address {
     int id;
+    
+    // flag
     int set;
+    
+    // max size of string value
+    // that's why garbage... coz emmory already allocated but not initialized
+    // mem optimization - if char* instead of char[] then we clould have improved memory
+        // if needed then we could have allocated dynamic memory
     char name[MAX_DATA];   // 512 array size
     char email[MAX_DATA];   // 512 array size
 };
@@ -22,7 +29,7 @@ struct Database {
 
 struct Connection {
     FILE *file;
-    struct Database *db;        //nested to nested struct 
+    struct Database *db;        //nested to nested struct  // *db is variable pointer of dtabase stuct
 };
 
 void die(const char *message)
@@ -38,6 +45,7 @@ void die(const char *message)
 
 void Address_print(struct Address *addr)
 {
+    // print in-address value to console
     printf("%d %s %s\n", addr->id, addr->name, addr->email);
 }
 
@@ -57,6 +65,7 @@ struct Connection *Database_open(const char *filename, char mode)
     if (!conn)
         die("Memory error");
 
+    // file me lock and open db file for read/write
     conn->db = malloc(sizeof(struct Database));
     if (!conn->db)
         die("Memory error");
@@ -82,24 +91,45 @@ struct Connection *Database_open(const char *filename, char mode)
 
 void Database_close(struct Connection *conn)
 {
+    // if ever create conn
     if (conn) {
+        // safely close
         if (conn->file)
+            // agr flush nahi bhi kia hota.. to bhi closed
             fclose(conn->file);
-        if (conn->db)   
+        if (conn->db)
+            // memory block read == file size jo tha | free coz in mem
             free(conn->db);
+        // file address - freed
         free(conn);
     }
 }
 
 void Database_write(struct Connection *conn)
 {
+    // file se ek piche
     rewind(conn->file);
 
-    int rc = fwrite(conn->db, sizeof(struct Database), 1, conn->file);
+    // write to file all data
+    // fread = file ka size utni memory allocate - usme value load kar deta hai
+    // source = memory fread pointer as copy
+    int rc = fwrite(
+        // input stream
+        conn->db,
+        // size of file
+        sizeof(struct Database), 
+        1,
+        // output stream
+        conn->file);
+    
+    
     if (rc != 1)
         die("Failed to write database.");
 
+    // os ke paas fs cache - 
+    // fs cache to disk force
     rc = fflush(conn->file);
+    
     if (rc == -1)
         die("Cannot flush database.");
 }
@@ -109,30 +139,35 @@ void Database_create(struct Connection *conn)
     int i = 0;
 
     for (i = 0; i < MAX_ROWS; i++) {
-        // make a prototype to initialize it
-            // constructor
-        
-        // value (record) created but not set
-        struct Address addr = {.id = i,.set = 0 };
+        // make a prototype to initialize it created the null 100 raw(as per the size)file db created as per the struct  
+        struct Address addr = {.id = i,.set = 0 };   // constructor 
         // then just assign it
         conn->db->rows[i] = addr;
+        // memory fread pointer write
+        // addr = address of fread open in memory
+        printf("inside DB_create %d and addr is %p \n ",conn->db->rows[i], addr);
+
     }
 }
 
-void Database_set(struct Connection *conn, int id, const char *name,
-        const char *email)
+void Database_set(struct Connection *conn, int id, const char *name,const char *email)
 {
     struct Address *addr = &conn->db->rows[id];
     if (addr->set)
         die("Already set, delete it first");
 
+    // flag to show if value is written or not
+    // file layout == <id> <set-flag> <name> <emnail>
     addr->set = 1;
+
     // WARNING: bug, read the "How To Break It" and fix this
     char *res = strncpy(addr->name, name, MAX_DATA);
+    
     // demonstrate the strncpy bug
     if (!res)
         die("Name copy failed");
 
+    // default \0 terminated string - junk ja raha hai but read nahi karna
     res = strncpy(addr->email, email, MAX_DATA);
     if (!res)
         die("Email copy failed");
@@ -140,21 +175,36 @@ void Database_set(struct Connection *conn, int id, const char *name,
 
 void Database_get(struct Connection *conn, int id)
 {
-    struct Address *addr = &conn->db->rows[id];
+    // address structu mem value ==  
+      // global program address of data at value(id) 
+    struct Address *addr = &(conn->db->rows[id]);
 
     if (addr->set) {
+        // if value to yaha
         Address_print(addr);
     } else {
+        
+        // else return 0
         die("ID is not set");
     }
 }
 
 void Database_delete(struct Connection *conn, int id)
 {
+    // ignored the record in memory
+    // created new record
+    // assigned id=id and set=0
     struct Address addr = {.id = id,.set = 0 };
+    // mem leaked coz we did not free value already read from fread
+    // extra ref - cassandra tombstones
+    
+    // new allocated empty row to id in fread memory
     conn->db->rows[id] = addr;
+    // extra ref - borrow checker feature in rust
 }
 
+
+// print all records to console OP
 void Database_list(struct Connection *conn)
 {
     int i = 0;
@@ -163,6 +213,7 @@ void Database_list(struct Connection *conn)
     for (i = 0; i < MAX_ROWS; i++) {
         struct Address *cur = &db->rows[i];
 
+        // do not print empty tuples from db - clean output
         if (cur->set) {
             Address_print(cur);
         }
@@ -171,6 +222,7 @@ void Database_list(struct Connection *conn)
 
 int main(int argc, char *argv[])
 {
+    // as a service i.e. while tru loop - then it'd leak memory
     if (argc < 3)
         die("USAGE: ex17 <dbfile> <action> [action params]");
     // ./ext17 ext7db create 23
@@ -188,21 +240,21 @@ int main(int argc, char *argv[])
     
     int id = 0;
 
-        // number of args passed 1st arg (int parse)
-    if (argc > 3) id = atoi(argv[3]);
-    // id = 23 || not atoi "23"
-    
-    
-    // MAX_ROWS = 100
+    if (argc > 3) id = atoi(argv[3]);    // by default taking as a string ""
     if (id >= MAX_ROWS) die("There's not that many records.");
 
     switch (action) {
         case 'c':
+            // in memory write
             Database_create(conn);
+            
+            // write to file
             Database_write(conn);
+            
             break;
 
         case 'g':
+            // get
             if (argc != 4)
                 die("Need an id to get");
 
@@ -210,14 +262,19 @@ int main(int argc, char *argv[])
             break;
 
         case 's':
+            // set
             if (argc != 6)
                 die("Need id, name, email to set");
-
+                                    // 4 = name ; 5 = email
             Database_set(conn, id, argv[4], argv[5]);
+            // above set in the inmemory file
+            
+            
             Database_write(conn);
             break;
 
         case 'd':
+            // delete
             if (argc != 4)
                 die("Need id to delete");
 
@@ -226,13 +283,16 @@ int main(int argc, char *argv[])
             break;
 
         case 'l':
+            // list
             Database_list(conn);
             break;
         default:
             die("Invalid action: c=create, g=get, s=set, d=del, l=list");
     }
 
+    // db close 
     Database_close(conn);
 
+    // program stopped so clean up memory
     return 0;
 }

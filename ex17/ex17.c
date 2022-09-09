@@ -20,7 +20,7 @@ struct Database {
 
 struct Connection {
     FILE *file;
-    struct Database *db;        //nested to nested struct 
+    struct Database *db;        //nested to nested struct  // *db is variable pointer of dtabase stuct
 };
 
 void die(const char *message)
@@ -101,15 +101,16 @@ void Database_create(struct Connection *conn)
     int i = 0;
 
     for (i = 0; i < MAX_ROWS; i++) {
-        // make a prototype to initialize it
-        struct Address addr = {.id = i,.set = 0 };
+        // make a prototype to initialize it created the null 100 raw(as per the size)file db created as per the struct  
+        struct Address addr = {.id = i,.set = 0 };   // constructor 
         // then just assign it
         conn->db->rows[i] = addr;
+        printf("inside DB_create %d and addr is %p \n ",conn->db->rows[i], addr);
+
     }
 }
 
-void Database_set(struct Connection *conn, int id, const char *name,
-        const char *email)
+void Database_set(struct Connection *conn, int id, const char *name,const char *email)
 {
     struct Address *addr = &conn->db->rows[id];
     if (addr->set)
@@ -129,7 +130,7 @@ void Database_set(struct Connection *conn, int id, const char *name,
 
 void Database_get(struct Connection *conn, int id)
 {
-    struct Address *addr = &conn->db->rows[id];
+    struct Address *addr = &(conn->db->rows[id]);
 
     if (addr->set) {
         Address_print(addr);
@@ -168,7 +169,7 @@ int main(int argc, char *argv[])
     struct Connection *conn = Database_open(filename, action);
     int id = 0;
 
-    if (argc > 3) id = atoi(argv[3]);
+    if (argc > 3) id = atoi(argv[3]);    // by default taking as a string ""
     if (id >= MAX_ROWS) die("There's not that many records.");
 
     switch (action) {

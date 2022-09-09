@@ -5,8 +5,8 @@
 int main()
 {
 	// Take any two strings
-	char s1[] = "This IS an example";
-	char s2[] = "is";
+	char s1[20] = "that IS an example";
+	char s2[5] = "is";
 	char* p;
 
 	// Find first occurrence of s2 in s1
@@ -19,7 +19,7 @@ int main()
 	} else
 		printf("String not found\n");
 
-  printf( "\n strcasestr :: %s\n", (char *)(strcasestr(s1,s2)));
+  printf( "\n strcasestr :: %s\n", strcasestr((char *)s1,(char *)s2));
 	
   return 0;
 }

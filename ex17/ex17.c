@@ -8,17 +8,13 @@
 #define MAX_ROWS 100
 
 // c has no class everything is at global scope
-
 struct Address {
     int id;
-    
-    // flag
+    // set is a flag
     int set;
-    
-    // max size of string value
-    // that's why garbage... coz emmory already allocated but not initialized
+    // max size of string value || that's why garbage... coz memory already allocated but not initialized.
     // mem optimization - if char* instead of char[] then we clould have improved memory
-        // if needed then we could have allocated dynamic memory
+    // if needed then we could have allocated dynamic memory
     char name[MAX_DATA];   // 512 array size
     char email[MAX_DATA];   // 512 array size
 };
@@ -45,7 +41,7 @@ void die(const char *message)
 
 void Address_print(struct Address *addr)
 {
-    // print in-address value to console
+    //print in-address value to console
     printf("%d %s %s\n", addr->id, addr->name, addr->email);
 }
 
@@ -71,7 +67,7 @@ struct Connection *Database_open(const char *filename, char mode)
         die("Memory error");
 
     if (mode == 'c') {
-        // create in write mode
+        // create file in write mode
         conn->file = fopen(filename, "w");
     } else {
         // read-write and pointer saved 
@@ -95,10 +91,10 @@ void Database_close(struct Connection *conn)
     if (conn) {
         // safely close
         if (conn->file)
-            // agr flush nahi bhi kia hota.. to bhi closed
+            // if flush nahi bhi kia hota.. to bhi closed
             fclose(conn->file);
         if (conn->db)
-            // memory block read == file size jo tha | free coz in mem
+            //memory block read == file size jo tha | free coz in mem
             free(conn->db);
         // file address - freed
         free(conn);
@@ -107,10 +103,10 @@ void Database_close(struct Connection *conn)
 
 void Database_write(struct Connection *conn)
 {
-    // file se ek piche
+    //rewind() function moves the file pointer at beginning of the file //https://www.geeksforgeeks.org/g-fact-82/
     rewind(conn->file);
 
-    // write to file all data
+    // write all data to file
     // fread = file ka size utni memory allocate - usme value load kar deta hai
     // source = memory fread pointer as copy
     int rc = fwrite(
@@ -121,7 +117,6 @@ void Database_write(struct Connection *conn)
         1,
         // output stream
         conn->file);
-    
     
     if (rc != 1)
         die("Failed to write database.");

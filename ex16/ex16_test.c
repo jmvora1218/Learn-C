@@ -7,7 +7,7 @@ struct Person{
 	int weight;
 } who;
 
-struct Person Person_create(char *name, int age, int height, int weight)
+struct Person Person_create(char name, int age, int height, int weight)
 {
 	struct Person who;
 
@@ -32,7 +32,7 @@ void Person_print(struct Person who)
 int main(int argc, char *argv[]){
 
 	// make two people structures	
-	struct Person joe = Person_create("Joe Alex", 32, 64, 140);
+	struct Person joe = Person_create("Joe Alex", NULL, 64, 140);
 	struct Person frank = Person_create("Frank Blank", 20, 72, 180);
 	
 	//print them out and where they are in memory

@@ -21,15 +21,12 @@ $(TARGET): CFLAGS += -fPIC
 $(TARGET): build $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
-# c is to create share library 
 
 $(SO_TARGET): $(TARGET) $(OBJECTS)
 
-#JUGAAD FIRST COMENT LINE 29 AND THEN 30 
-	gcc /root/LCTHW/ex32_LL/liblcthw/tests/list_tests.c /root/LCTHW/ex32_LL/liblcthw/build/liblcthw.so -o /root/LCTHW/ex32_LL/liblcthw/tests/list_tests
-# $(CC) -shared -o $@ $(OBJECTS)
+	gcc /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c /root/LCTHW/ex33_algo/liblcthw/build/liblcthw.so -o /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests
+#$(CC) -shared -o $@ $(OBJECTS)
 
-## 
 build:
 	@mkdir -p build
 	@mkdir -p bin

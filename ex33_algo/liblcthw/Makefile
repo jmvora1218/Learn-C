@@ -23,9 +23,11 @@ $(TARGET): build $(OBJECTS)
 	ranlib $@
 
 $(SO_TARGET): $(TARGET) $(OBJECTS)
+	$(CC) -shared -o $@ $(OBJECTS)
+	$(CC) $(TEST_SRC) $(SO_TARGET) -o /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests
 
-	gcc /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c /root/LCTHW/ex33_algo/liblcthw/build/liblcthw.so -o /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests
-#$(CC) -shared -o $@ $(OBJECTS)
+
+# $(CC) /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c /root/LCTHW/ex33_algo/liblcthw/build/liblcthw.so -o /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests
 
 build:
 	@mkdir -p build
@@ -39,10 +41,11 @@ tests: $(TESTS)
 
 # The Cleaner
 clean:
-	rm -rf build $(OBJECTS) $(TESTS)
-	rm -f tests/tests.log 
+	rm -rfv build $(OBJECTS) $(TESTS)
+	rm -fv tests/tests.log 
+	rm -fv bin/* 
 	find . -name "*.gc*" -exec rm {} \;
-	rm -rf `find . -name "*.dSYM" -print`
+	rm -rfv `find . -name "*.dSYM" -print`
 
 # The Install
 install: all

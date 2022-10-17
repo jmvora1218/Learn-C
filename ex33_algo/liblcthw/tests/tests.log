@@ -1,15 +1,5 @@
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:93: ----- RUNNING: ./tests/list_algos_tests
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:87: 
+DEBUG tests/list_algos_tests.c:90: ----- RUNNING: ./tests/list_algos_tests
+DEBUG tests/list_algos_tests.c:84: 
 ----- test_bubble_sort
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:88: 
------ test_merge_sort
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:93: ----- RUNNING: ./tests/list_algos_tests
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:87: 
------ test_bubble_sort
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:88: 
------ test_merge_sort
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:93: ----- RUNNING: ./tests/list_algos_tests
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:87: 
------ test_bubble_sort
-DEBUG /root/LCTHW/ex33_algo/liblcthw/tests/list_algos_tests.c:88: 
+DEBUG tests/list_algos_tests.c:85: 
 ----- test_merge_sort

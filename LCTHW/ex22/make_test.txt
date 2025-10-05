@@ -1,0 +1,29 @@
+#https://www.thegeekstuff.com/2010/08/make-utility/
+#https://makefiletutorial.com/
+
+#CFLAGS=-g -Wall -DNDEBUG 
+*************************************************
+ex22_main: ex22_main.o
+	cc ex22_main.o -o ex22_main
+	
+ex22_main.o: ex22_main.c
+	cc -c ex22_main.c ex22_main.o 
+
+ex22_main.c:ex22.o
+	cc ex22.o -o ex22
+
+ex22.o: ex22.c
+	cc -c ex22.c ex22.o
+
+ex22.c:
+	echo "int main() { return 0; }" ex22.c
+*************************************************
+ex22_main:ex22.o ex22_main.c
+	gcc -Wall -g -DNDEBUG ex22_main.c ex22.o -o ex22_main
+
+ex22.o:ex22.c
+	gcc -Wall -g -DNDEBUG -c -o ex22.o ex22.c
+******************************************************
+ex22_main: ex22_main.c ex22.c
+	cc -o ex22_main ex22_main.c ex22.c
+**************************************************
